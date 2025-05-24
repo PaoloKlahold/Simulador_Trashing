@@ -1,4 +1,4 @@
-package simulator.Process;
+package simulator.process;
 
 public class Process {
     private final int id;
@@ -7,4 +7,7 @@ public class Process {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
 }

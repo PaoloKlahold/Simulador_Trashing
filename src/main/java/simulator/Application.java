@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class Application {
 
 
-    private static final long INITIAL_AUTO_SWAP_INTERVAL_MS = 4000;
-    private static final long MIN_AUTO_SWAP_INTERVAL_MS = 500;
-    private static final long AUTO_SWAP_DECREMENT_STEP_MS = 1000;
+    private static final long INITIAL_AUTO_SWAP_INTERVAL_MS = 8000;
+    private static final long MIN_AUTO_SWAP_INTERVAL_MS = 800;
+    private static final long AUTO_SWAP_DECREMENT_STEP_MS = 2500;
     private static final long IDLE_CHECK_INTERVAL_MS = 3000;
 
     private MemoryManager memoryManager;
@@ -62,19 +62,19 @@ public class Application {
             switch (input) {
                 case "add":
                     MemoryProcess newProcess = new MemoryProcess("P" + nextProcessIdCounter++);
-                    System.out.println("\n[CLI] Adicionando processo: " + newProcess.getId());
+                    System.out.println("\n[CLI] Adicionando processo: " + newProcess.id());
 
                     MemoryProcess swappedOut = memoryManager.addProcess(newProcess);
 
                     if (swappedOut != null) {
-                        System.out.println("\n[SWAP EVENT] Processo " + swappedOut.getId() +
-                                " removido (SWAP-OUT) para dar espaço ao " + newProcess.getId() + " (SWAP-IN).");
+                        System.out.println("\n[SWAP EVENT] Processo " + swappedOut.id() +
+                                " removido (SWAP-OUT) para dar espaço ao " + newProcess.id() + " (SWAP-IN).");
                         if (memoryManager.getSwapCount() >= trashingAlertThreshold) {
                             System.out.println("[TRASHING ALERT] Nível crítico de trashing! Swaps: " +
                                     memoryManager.getSwapCount() + ". Sistema lento.");
                         }
                     } else {
-                        System.out.println("\n[MEM] Processo " + newProcess.getId() + " adicionado à RAM.");
+                        System.out.println("\n[MEM] Processo " + newProcess.id() + " adicionado à RAM.");
                     }
                     displaySystemState();
                     autoSwapperTask.rescheduleNow();
@@ -103,7 +103,7 @@ public class Application {
         sb.append("\n[SYSTEM]\n");
         List<MemoryProcess> processesInRam = memoryManager.getProcessesInRam();
         String ramContents = processesInRam.stream()
-                .map(MemoryProcess::getId)
+                .map(MemoryProcess::id)
                 .collect(Collectors.joining(", ", "[", "]"));
         sb.append("Memória Principal (").append(memoryManager.getCurrentSize()).append("/")
                 .append(memoryManager.getCapacity()).append("): ").append(ramContents).append("\n");
@@ -113,7 +113,7 @@ public class Application {
             List<MemoryProcess> contendingProcesses = memoryManager.getAllProcessesEverInSystem();
             if (contendingProcesses.size() > memoryManager.getCapacity()) {
                 String contendingProcsStr = contendingProcesses.stream()
-                        .map(MemoryProcess::getId)
+                        .map(MemoryProcess::id)
                         .collect(Collectors.joining(", "));
                 sb.append("Processos: ").append(contendingProcsStr).append("\n");
             }
@@ -184,8 +184,8 @@ public class Application {
 
             SwapResult result = memoryManager.performAutoSwap();
             if (result != null) {
-                System.out.println("\n\n[AUTO-SWAP EVENT] Swapped OUT: " + result.swappedOut.getId() +
-                        ", Swapped IN: " + result.swappedIn.getId() + ". Sistema em thrashing.");
+                System.out.println("\n\n[AUTO-SWAP EVENT] Swapped OUT: " + result.swappedOut.id() +
+                        ", Swapped IN: " + result.swappedIn.id() + ". Sistema em thrashing.");
                 if (memoryManager.getSwapCount() >= trashingAlertThreshold) {
                     System.out.println("[TRASHING ALERT] Nível crítico de trashing! Swaps: " + memoryManager.getSwapCount());
                 }

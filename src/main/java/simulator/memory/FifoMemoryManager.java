@@ -67,7 +67,7 @@ public class FifoMemoryManager implements MemoryManager {
         for (MemoryProcess p : allProcessesEverInSystem) {
             boolean isInRam = false;
             for (MemoryProcess ramP : currentRamProcesses) {
-                if (ramP.getId().equals(p.getId())) {
+                if (ramP.id().equals(p.id())) {
                     isInRam = true;
                     break;
                 }

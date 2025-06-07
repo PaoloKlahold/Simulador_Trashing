@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class Application {
 
 
-    private static final long INITIAL_AUTO_SWAP_INTERVAL_MS = 8000;
-    private static final long MIN_AUTO_SWAP_INTERVAL_MS = 800;
-    private static final long AUTO_SWAP_DECREMENT_STEP_MS = 2500;
+    private static final long INITIAL_AUTO_SWAP_INTERVAL_MS = 40000;
+    private static final long MIN_AUTO_SWAP_INTERVAL_MS = 4000;
+    private static final long AUTO_SWAP_DECREMENT_STEP_MS = 12500;
     private static final long IDLE_CHECK_INTERVAL_MS = 3000;
 
     private MemoryManager memoryManager;
@@ -62,7 +62,7 @@ public class Application {
             switch (input) {
                 case "add":
                     MemoryProcess newProcess = new MemoryProcess("P" + nextProcessIdCounter++);
-                    System.out.println("\n[CLI] Adicionando processo: " + newProcess.id());
+                    System.out.println("\n[CLI] Adicionando Processo: " + newProcess.id());
 
                     MemoryProcess swappedOut = memoryManager.addProcess(newProcess);
 
